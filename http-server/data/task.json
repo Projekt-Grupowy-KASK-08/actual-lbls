@@ -1,0 +1,15 @@
+[
+    {
+      "id": 1,
+      "data":	{
+	  "csv": "http://localhost:8787/testoweDane.csv"
+	}
+    },
+    {
+
+       "id": 2,
+       "data": {
+	    "csv": "http://localhost:8787/testoweDane2.csv"
+        }
+    }
+]

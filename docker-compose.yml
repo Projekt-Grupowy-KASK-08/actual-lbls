@@ -1,0 +1,9 @@
+services:
+  label-studio:
+    image: 'heartexlabs/label-studio'
+    ports:
+      - '8080:8080'
+  http-server:
+    build: './http-server'
+    ports:
+      - '8787:8787'

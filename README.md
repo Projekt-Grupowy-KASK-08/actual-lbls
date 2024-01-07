@@ -1,13 +1,13 @@
 # actual-lbls
 
-## Running application via docker-compose
+### Running application via docker-compose
 To serve the app, run 
 ```sh
 docker compose up
 ```
 Label studio will be available on port 8080 and http server with files on port 8787
 
-## Serving data
+### Serving data
 We use a static web server to serve labeling data to client. To upload your data, simply move it to [data directory](./http-server/data)
 
 ### URLs

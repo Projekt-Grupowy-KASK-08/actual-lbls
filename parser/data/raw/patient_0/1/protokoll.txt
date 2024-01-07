@@ -1,0 +1,16 @@
+09:21:32 -- ------------------------------------------ 
+09:21:32 -- New site no 1 created( Depth: -10.0 mm )
+09:21:32 -- 
+09:21:32 -- Quantisation: 16 Bit
+09:21:32 -- Sampling rate: 20000Hz, channel configuration: 1: Central, 2: Lateral
+09:21:32 -- Config -- Mi-Channels: HW-fcHP: 0Hz  HW-fcLP: 5000Hz  Vu: 1 -- SW-fcHP: 160Hz  SW-fcLP: 5000Hz  
+09:21:32 -- Datafile opened: patienten\patient_0\1\01_MER_CH1_530616091.dat
+09:21:32 -- Start recording in file patienten\patient_0\1\01_MER_CH1_530616091.dat
+09:21:32 -- Datafile opened: patienten\patient_0\1\01_MER_CH2_530616091.dat
+09:21:32 -- Start recording in file patienten\patient_0\1\01_MER_CH2_530616091.dat
+09:21:32 -- EMG-Datafile opened: patienten\patient_0\1\01_TRG_530616091.dat
+09:21:32 -- EMG-Datafile opened: patienten\patient_0\1\01_STIM_530616091.dat
+09:21:32 -- Start recording in file patienten\patient_0\1\01_TRG_530616091.dat
+09:21:32 -- Start recording in file patienten\patient_0\1\01_STIM_530616091.dat
+09:21:38 -- 
+09:21:38 -- ------------------------------------------ 

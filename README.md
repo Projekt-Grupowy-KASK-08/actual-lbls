@@ -3,8 +3,8 @@
 ### Data preparation
 To prepare data, please install dependencies, put proper MER data in the `data/raw/` directory and run the script.
 ```
+cd parser
 pip install -r requirements.txt
-cd source
 python3 data_transformer.py
 ```
 Preprocessed data will show up in the `data/preprocessed` directory.

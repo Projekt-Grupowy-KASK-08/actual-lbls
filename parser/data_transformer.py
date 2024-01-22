@@ -1,7 +1,7 @@
 import os, re, sys
 import numpy as np
 import pandas as pd
-from utils import read_from_dat_file, preprocess_raw_data, remove_duplicates_from_list
+from utils import read_from_dat_file, preprocess_raw_data, remove_duplicates_from_list, bandpass_filter
 
 INPUT_DIR = sys.path[0] + "/data/raw"
 OUTPUT_DIR = sys.path[0] + "/data/preprocessed"
@@ -21,34 +21,31 @@ def process_mer_channels(inputDir, outputDir, siteInfo):
     """
 
     channelPaths = list(map(lambda filename: os.path.join(inputDir, filename), siteInfo['recordFiles']))
-   
-
-    allChannelsData = []
-    numberOfEntriesPerChannel = [] 
-    for channelPath in channelPaths:
-            raw_data = read_from_dat_file(channelPath)
-            data = preprocess_raw_data(raw_data)
-            
-            numberOfEntriesPerChannel.append(len(data))
-            allChannelsData.append(data)
 
 
-    minEntries = min(numberOfEntriesPerChannel)
-    numberOfEntriesPerChannel = [channelData[:minEntries] for channelData in allChannelsData]
-    time_index = np.arange(0, minEntries / siteInfo['samplingRate'], 1.0 / siteInfo['samplingRate'])
+    for i, channelPath in enumerate(channelPaths):
+        # todo it is not raw at all bcs bandpass filer is used on it
+        raw_data = bandpass_filter(read_from_dat_file(channelPath))
 
-    data = {
-        "Time": time_index,
-    }
+        data = preprocess_raw_data(raw_data)
 
-    for i, channelData in enumerate(allChannelsData):
+        minEntries = min(len(data), minEntries) if i > 0 else len(data)
+        time_index = np.arange(0, minEntries / siteInfo['samplingRate'], 1.0 / siteInfo['samplingRate'])
+
         channelName = siteInfo['channelsDesc'][i]
-        data[channelName] = channelData[:minEntries]
+        depth = siteInfo['depth']
 
-    merFilename = os.path.basename(channelPaths[0])
-    outputFilename = merFilename.replace("_CH1", "").replace(".dat", ".csv")
-    outputPath = os.path.join(outputDir, outputFilename)
-    pd.DataFrame(data=data).to_csv(outputPath, index=None)
+        print(siteInfo)
+
+        data = {
+            "Time": time_index,
+            "1: raw": raw_data[:minEntries],
+            "2: preprocessed": data[:minEntries]
+        }
+
+        pd.DataFrame(data=data).to_csv(os.path.join(outputDir, f"depth:{depth}::channel:{channelName}.csv"), index=None)
+
+
 
 def extractSiteInfo(siteText):
     """ Extracts information like depth of probe or sampling rate from site text

@@ -1,8 +1,9 @@
 # Custom 
 .DS_Store
 __pycache__
-http-server/data
+#http-server/data
 parser/data
+.idea
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

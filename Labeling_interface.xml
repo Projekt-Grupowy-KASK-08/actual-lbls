@@ -1,20 +1,14 @@
 <View>
-  <Header size="4" underline="true" value="$name"></Header>
-  <!-- Object tag for time series data source -->
-    <TimeSeries fixedScale="true" name="ts" valueType="url" value="$csv" sep="," timeColumn="Time">
-      <Channel column="1: Central" strokeColor="#17b" legend="Channel 1" units="Activity"/>
-      <Channel column="2: Lateral" strokeColor="#f70" legend="Channel 2" units="Activity"/>
+  <Header size="4" underline="true" value="$name" />
+    <TimeSeries name="ts" valueType="url" value="$csv" sep="," overviewWidth="1%" timeColumn="Time">
+      <Channel column="1: Raw" strokeColor="#17b" legend="Raw" units="Activity" fixedScale="false" />
+      <Channel column="2: Preprocessed" strokeColor="#f70" legend="Preprocessed" units="Activity"
+        fixedScale="true" />
     </TimeSeries>
-    <Choices name="choices" toName="ts" required="true">
-      <Choice value="Skorupa lub prążkowie"/>
-      <Choice value="Części zewnętrzne gałki bladej (5-6 mm przed celem)"/>
-      <Choice value="Części wewnętrzne gałki bladej (2-3 mm przed celem do 1 mm za celem)"/>
-    </Choices>
-    <!-- No region selected section -->
-      <View visibleWhen="no-region-selected">
-        <!-- Control tag for region labels -->
-          <TimeSeriesLabels name="label" toName="ts">
-            <Label value="Region" background="#5b5"/>
-          </TimeSeriesLabels>
-   </View>
+    <TimeSeriesLabels name="label" toName="ts">
+      <Label value="Skorupa lub prazkowie" background="#80ff00" />
+      <Label value="Czesci zewnetrzne galki bladej (5-6 mm przed celem)" background="#D4380D" />
+      <Label value="Czesci wewnetrzne galki bladej (2-3 mm przed celem lub do 1 mm za celem)"
+        background="#FFC069" />
+    </TimeSeriesLabels>
 </View>

@@ -1,29 +1,28 @@
 import os
-from FixNames import find_patient, get_date
+from FixNames import find_patient, get_date, change_polish_characters
 import re
-LABEL_STUDIO_URL = 'http://localhost:8080/'
-FILE_SERVER_URL = 'http://localhost:8787/'
+LABEL_STUDIO_URL = 'https://kask.eti.pg.edu.pl/dbs/labels/'
+FILE_SERVER_URL = 'https://kask.eti.pg.edu.pl/dbs/static/preprocessed/'
 OUTPUT_DIR = r"C:\semestr 6\actual-lbls\parser"  # path to save the script
-INPUT_DIR = r"C:\semestr 6\actual-lbls\http-server\data"  # path to the directory that contains patients directories
-PROJECT_ID_OFFSET = 23  # id ze sciezki url ostatnio utworzonego projektu (lewy gorny rog)
-TOKEN = "c22f991b21835d86e7a9485c9629640340aaf692"
+INPUT_DIR = r"D:\preprocessed"  # path to the directory that contains patients directories
+PROJECT_ID_OFFSET = 1025  # id ze sciezki url ostatnio utworzonego projektu (lewy gorny rog)
+TOKEN = ""
 
 
 def get_data_for_project(id_chart, patient_name, operation_id, file_name, f_p, last):
-    match = re.match(r'depth-(?P<depth>-?\d+,\d+)_kanal(?P<kanal>\w+)\.csv', file_name)
+    match = re.match(r'depth(?P<depth>-?\d+,\d+)_kanal(?P<kanal>\w+)\.csv', file_name)
     depth = "Lack_of_depth"
     chanel = "Lack_of_chanel"
     if match:
         depth = match.group('depth')
         chanel = match.group('kanal')
-        print(f"Depth: {depth}, Kanal: {chanel}")
     else:
         print("Nie znaleziono odpowiadających wzorców.")
     f_p.write("\n")
     f_p.write("{\n\"id\": "+str(id_chart)+",\n")
     f_p.write("\"data\": {")
     f_p.write("\"csv\": \""+FILE_SERVER_URL + "/" + patient_name + "/" + operation_id + "/" + file_name + "\",")
-    f_p.write("\"text\": \"" + "Depth: -" + depth + " mm " + " Channel: " + chanel + "\"")
+    f_p.write("\"text\": \"" + "Depth: " + depth + " mm " + " Channel: " + chanel + "\"")
     if last:
         f_p.write("}\n},")
     else:
@@ -50,8 +49,10 @@ def get_project_script(patient_names_list):
                 # "create project" command BEGIN
                 f_p.write("curl -v -k -H Content-Type:application/json -H 'Authorization: Token "+TOKEN+"' -X POST '" + LABEL_STUDIO_URL +\
                           "/api/projects' --data '{ \n\"title\": \"")
+
+
                 full_name = str(find_patient(operation_id))
-                f_p.write(full_name+" "+str(get_date(full_name, operation_id)))
+                f_p.write(change_polish_characters(full_name)+" "+str(get_date(full_name, operation_id)))
                 f_p.write("\",")
                 f_p.write("\n")
                 f_p.write(parameters)

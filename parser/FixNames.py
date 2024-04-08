@@ -9,6 +9,16 @@ def find_patient(id_operacji):
     return "Lack_of_patient_name"
 
 
+def change_polish_characters(text):
+    polish_chars_mapping = {
+        'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n',
+        'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z',
+        'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N',
+        'Ó': 'O', 'Ś': 'S', 'Ź': 'Z', 'Ż': 'Z'
+    }
+    return ''.join(polish_chars_mapping.get(char, char) for char in text)
+
+
 def get_date(patient_name, operation_id):
     with open(os.path.join(PATH_TO_PATIENTS, patient_name, operation_id, "protokoll.txt"), 'r') as file:
         line = file.readline()

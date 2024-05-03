@@ -21,4 +21,4 @@ Label studio will be available on port 8080 and http server with files on port 8
 We use a static web server to serve labeling data to client. To upload your data, simply move it to [data directory](./http-server/data)
 
 ### URLs
-To import tasks via `.json` file, you have to specify a backend-relative url to the file (so instead of `localhost:8787/tasks.json`, it will be `http://http-server:8787/tasks.json`). The json file has to specify client-relative url, eg. `localhost:8787/data1.csv`
+To create projects and import data you need to set up few variables inside `LabelStudioAPI.py`. Firstly `TOKEN` which value can be found in label studio settings. `PROJECT_ID_OFFSET` id of lastly created project in your label studio account (last project is on top-left corner). You can find it in url path http://localhost:8080/projects/2/data?tab=1 in this case it's 2. Also make sure that `INPUT_DIR`, `OUTPUT_DIR`, `FILE_SERVER_URL` and `LABEL_STUDIO_URL` are correct. Run LabelStudioApi.py. Open console in `OUTPUT_DIR` and run `bash CreateProjects.sh`.

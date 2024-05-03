@@ -1,10 +1,10 @@
 import os, re, sys
 import numpy as np
 import pandas as pd
-from utils import read_from_dat_file, preprocess_raw_data, remove_duplicates_from_list, bandpass_filter
+from utils import read_from_dat_file, preprocess_raw_data, remove_duplicates_from_list, transform_data
 
-INPUT_DIR = sys.path[0] + "/data/raw"
-OUTPUT_DIR = sys.path[0] + "/data/preprocessed"
+INPUT_DIR = r"D:\DBS archives"
+OUTPUT_DIR = r"D:\preprocessed"
 PROTOCOL_FILENAME = "protokoll.txt"
 
 
@@ -22,29 +22,31 @@ def process_mer_channels(inputDir, outputDir, siteInfo):
     """
 
     channelPaths = list(map(lambda filename: os.path.join(inputDir, filename), siteInfo['recordFiles']))
+    if len(channelPaths) == len(siteInfo['channelsDesc']):
+        for i, channelPath in enumerate(channelPaths):
+            # todo it is not raw at all bcs bandpass filer is used on it
+            raw_data = read_from_dat_file(channelPath)
+            raw_data = transform_data(raw_data)
 
-    for i, channelPath in enumerate(channelPaths):
-        # todo it is not raw at all bcs bandpass filer is used on it
-        raw_data = bandpass_filter(read_from_dat_file(channelPath))
+            data = preprocess_raw_data(raw_data)
 
-        data = preprocess_raw_data(raw_data)
+            minEntries = min(len(data), minEntries) if i > 0 else len(data)
+            time_index = np.arange(0, minEntries / siteInfo['samplingRate'], 1.0 / siteInfo['samplingRate'])
 
-        minEntries = min(len(data), minEntries) if i > 0 else len(data)
-        time_index = np.arange(0, minEntries / siteInfo['samplingRate'], 1.0 / siteInfo['samplingRate'])
+            channelName = siteInfo['channelsDesc'][i].replace(":", "").replace(" ", "").replace("1", "").replace("2",
+                                                                                                                 "")
 
-        channelName = siteInfo['channelsDesc'][i].replace(":", "").replace(" ", "").replace("1", "").replace("2", "")
+            depth = siteInfo['depth']
 
-        depth = siteInfo['depth']
+            print(siteInfo)
 
-        print(siteInfo)
+            data = {
+                "Time": time_index,
+                "1: raw": raw_data[:minEntries],
+                "2: preprocessed": data[:minEntries]
+            }
 
-        data = {
-            "Time": time_index,
-            "1: raw": raw_data[:minEntries],
-            "2: preprocessed": data[:minEntries]
-        }
-
-        pd.DataFrame(data=data).to_csv(os.path.join(outputDir, f"depth{depth}_kanal{channelName}.csv"), index=None)
+            pd.DataFrame(data=data).to_csv(os.path.join(outputDir, f"depth{depth}_kanal{channelName}.csv"), index=None)
 
 
 def extractSiteInfo(siteText):
@@ -99,25 +101,32 @@ def process_patients(inputDir, outputDir, logFilename):
     patientsNumber = len(patientsDirectories)
 
     for i, patientName in enumerate(patientsDirectories):
-        print(f"Processing {patientName} ({i + 1}/{patientsNumber})...")
-        patientPath = os.path.join(inputDir, patientName)
+        if patientName not in ["awegaas", "empty", "test"]:
+            print(f"Processing {patientName} ({i + 1}/{patientsNumber})...")
+            try:
+                patientPath = os.path.join(inputDir, patientName)
 
-        for merId in os.listdir(patientPath):
-            merIdPath = os.path.join(patientPath, merId)
-            name, last_name = patientName.split()
-            initials = name[0] + last_name[0]
-            outputDirPath = os.path.join(outputDir, initials, merId)
-            if not os.path.exists(outputDirPath):
-                os.makedirs(outputDirPath)
+                for merId in os.listdir(patientPath):
+                    try:
+                        merIdPath = os.path.join(patientPath, merId)
+                        outputDirPath = os.path.join(outputDir, patientName, merId)
+                        if not os.path.exists(outputDirPath):
+                            os.makedirs(outputDirPath)
 
-            logFilePath = os.path.join(merIdPath, logFilename)
-            sitesText = ""
-            with open(logFilePath, "r") as logFile:
-                sitesText = re.findall(r"New site no .+? -{42}", logFile.read(), re.DOTALL)
+                        logFilePath = os.path.join(merIdPath, logFilename)
+                        sitesText = ""
+                        with open(logFilePath, "r") as logFile:
+                            sitesText = re.findall(r"New site no .+? -{42}", logFile.read(), re.DOTALL)
 
-            sitesInfo = map(extractSiteInfo, sitesText)
-            for siteInfo in sitesInfo:
-                process_mer_channels(merIdPath, outputDirPath, siteInfo)
+                        sitesInfo = map(extractSiteInfo, sitesText)
+                        for siteInfo in sitesInfo:
+                            process_mer_channels(merIdPath, outputDirPath, siteInfo)
+                    except Exception as e:
+                        print("ERROR: Could not process MER recording! " + merId)
+                        print(e)
+            except Exception as e:
+                print("ERROR: Could not process patient! " + patientName)
+                print(e)
 
 
 process_patients(INPUT_DIR, OUTPUT_DIR, PROTOCOL_FILENAME)

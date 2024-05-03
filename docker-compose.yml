@@ -1,9 +1,32 @@
+version: '3.9'
+
 services:
   label-studio:
-    image: 'heartexlabs/label-studio'
-    ports:
-      - '8080:8080'
+    image: heartexlabs/label-studio
+    environment:
+      - LABEL_STUDIO_HOST=http://localhost/dbs/labels
+    networks:
+      - etykiety 
+
   http-server:
-    build: './http-server'
+    image: nginx:alpine
+    volumes:
+      - ./http-server/data:/srv
+      - ./http-server/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - etykiety
+
+  nginx-proxy:
+    image: nginx:alpine
     ports:
-      - '8787:8787'
+      - '80:80'
+    volumes:
+      - ./reverse-proxy.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - etykiety
+    depends_on:
+      - label-studio
+      - http-server
+
+networks:
+  etykiety:

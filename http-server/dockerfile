@@ -1,6 +1,0 @@
-FROM node:latest
-RUN npm install http-server -g
-COPY ./data ./public
-EXPOSE 8787
-
-CMD ["http-server", "-p", "8787", "--cors"]

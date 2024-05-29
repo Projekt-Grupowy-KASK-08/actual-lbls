@@ -4,8 +4,10 @@ import io
 from datetime import datetime
 from parseLabel import get_label_data
 
-API_KEY = 'bf7e7d843681e97e6a0bc32535cb26a69fbae376'
-LABEL_STUDIO_URL = 'http://localhost/dbs/labels/'
+API_KEY = '1c0d537815c777dd0394938b9b1a6c849cb5de84'
+LABEL_STUDIO_URL = 'https://kask.eti.pg.edu.pl/dbs/labels/'
+FIRST_ID = 1631
+LAST_ID = 1914
 
 
 def fetch_project_data(project_id):
@@ -20,27 +22,15 @@ def fetch_project_data(project_id):
         return pd.DataFrame()
 
 
-projects_response = requests.get(
-    f'{LABEL_STUDIO_URL}/api/projects/',
-    headers={'Authorization': f'Token {API_KEY}'}
-)
-if projects_response.status_code == 200:
-    projects = projects_response.json()['results']
-else:
-    print("Błąd przy pobieraniu listy projektów:", projects_response.status_code)
-    projects = []
-
 all_data = pd.DataFrame()
-for project in projects:
-    if 'id' in project:  # Sprawdzanie, czy klucz 'id' istnieje w słowniku
-        print("Pobieranie danych dla projektu", project['id'])
-        project_data = fetch_project_data(project['id'])
-        if not project_data.empty:
-            all_data = pd.concat([all_data, project_data], ignore_index=True)
-        else:
-            print(f"Brak danych dla projektu {project['id']}")
+for id in range(FIRST_ID, LAST_ID+1):
+    print("Pobieranie danych dla projektu", id)
+    project_data = fetch_project_data(id)
+    if not project_data.empty:
+        all_data = pd.concat([all_data, project_data], ignore_index=True)
     else:
-        print("Nieprawidłowa struktura danych projektu:", project)
+        print(f"Brak danych dla projektu {id}")
+
 
 
 now = datetime.now()

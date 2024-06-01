@@ -32,6 +32,7 @@ def average_frequency_of_spikes(data, f=20000):
 
 """
 
+    Calculate the frequency factor of the data.
     
     Rf = Number of intervals between 33ms and 66ms / number of intervals
     
@@ -75,6 +76,46 @@ def launch_rate(intervals):
     return Rb
 
 
+"""
+    Pause indicator
+    PI = Number of intervals shorter than 50ms / number of intervals longer than 50ms
+"""
+
+
+def pause_indicator(intervals):
+    shorter_than_50ms = np.sum(intervals < 50)
+    longer_than_50ms = np.sum(intervals > 50)
+
+    if longer_than_50ms == 0:
+        return 0
+
+    PI = shorter_than_50ms / longer_than_50ms
+    return PI
+
+"""
+    Pause ratio
+    PR = Sum of time of intervals shorter than 50ms / Sum of time of intervals longer than 50ms
+"""
+
+
+def pause_ratio(intervals):
+    # Sum of time of intervals shorter than 50ms
+    sum_short_intervals = np.sum(intervals[intervals < 50])
+
+    # Sum of time of intervals longer than 50ms
+    sum_long_intervals = np.sum(intervals[intervals >= 50])
+
+    if sum_long_intervals == 0:
+        return 0
+
+    PR = sum_short_intervals / sum_long_intervals
+    return PR
+
+
+"""
+    Modified Launch rate
+"""
+
 file = '/Users/pawelmanczak/Downloads/pacjenci/extracted_data.csv'
 
 df = pd.read_csv(file)
@@ -87,9 +128,11 @@ Rf = frequency_coefficient(intervals)
 print("Współczynnik częstosci " + str(Rf))
 print("Srednia cczęstotliowść występowania impulsów nerwowych " + str(average_frequency_of_spikes(data)))
 print("Współczynnik wystrzeliwania " + str(launch_rate(intervals)))
+print("wskaźnik pauz " + str(pause_indicator(intervals)))
+print("Współczynnik pauz " + str(pause_ratio(intervals)))
 
-#spike_indices = np.array([0, 2000, 4000, 8000, 13000, 20000])
-#print(calculate_intervals(spike_indices))
+# spike_indices = np.array([0, 2000, 4000, 8000, 13000, 20000])
+# print(calculate_intervals(spike_indices))
 
 """plt.figure(figsize=(10, 6))
 plt.plot(data, label='Signal')

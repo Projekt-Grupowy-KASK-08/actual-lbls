@@ -3,7 +3,7 @@ import os
 
 
 # Base directory
-base_dir = 'D:\\STUDIA\\Projekt Grupowy\\actual-lbls\\pacjenci\\'
+base_dir = 'C:\\Users\kasia\\OneDrive\\Pulpit\\pacjenci\\'
 
 # Read the CSV file
 df = pd.read_csv(base_dir + 'label.csv')

@@ -4,7 +4,7 @@ import numpy as np
 import scipy.stats as stats
 
 # Base directory
-base_dir = 'C:\\Users\\kasia\\OneDrive\\Pulpit\\pacjenci\\'
+base_dir = '/Users/pawelmanczak/Downloads/pacjenci/'
 
 # Read the CSV file
 df = pd.read_csv(base_dir + 'label_with_file_path.csv')

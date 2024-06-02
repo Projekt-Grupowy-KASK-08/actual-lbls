@@ -1,37 +1,11 @@
-version: '3.9'
+version: "3.8"
 
 services:
-  label-studio:
-    image: heartexlabs/label-studio
-    environment:
-      - LABEL_STUDIO_HOST=http://localhost/dbs/labels
-    networks:
-      - etykiety 
-
-  http-server:
-    image: nginx:alpine
-    volumes:
-      - ./http-server/data:/srv
-      - ./http-server/nginx.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - etykiety
-
-  nginx-proxy:
-    image: nginx:alpine
-    ports:
-      - '80:80'
-    volumes:
-      - ./reverse-proxy.conf:/etc/nginx/nginx.conf:ro
-    networks:
-      - etykiety
-    depends_on:
-      - label-studio
-      - http-server
-
   ml-backend:
+    container_name: ml-backend
     image: humansignal/ml-backend:v0
     build:
-      context: ./label-predictor
+      context: .
       args:
         TEST_ENV: ${TEST_ENV}
     environment:
@@ -51,13 +25,8 @@ services:
       # Use prefix 'http://' or 'https://' for the URL always.
       # Determine the actual IP using 'ifconfig' (Linux/Mac) or 'ipconfig' (Windows).
       - LABEL_STUDIO_URL=http://label-studio
-      - LABEL_STUDIO_API_KEY=4fc41f83962fa2b1319b2d0db9988dc8068678f1
+      - LABEL_STUDIO_API_KEY=1c0d537815c777dd0394938b9b1a6c849cb5de84
     ports:
       - "9090:9090"
     volumes:
-      - "./label-predictor/data/server:/data"
-    networks:
-      - etykiety
-
-networks:
-  etykiety:
+      - "./data/server:/data"

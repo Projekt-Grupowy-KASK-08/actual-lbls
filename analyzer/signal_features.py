@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from numpy.fft import fft
 
 
 def countSpikes(data):
@@ -92,6 +93,7 @@ def pause_indicator(intervals):
     PI = shorter_than_50ms / longer_than_50ms
     return PI
 
+
 """
     Pause ratio
     PR = Sum of time of intervals shorter than 50ms / Sum of time of intervals longer than 50ms
@@ -114,7 +116,93 @@ def pause_ratio(intervals):
 
 """
     Modified Launch rate
+    Rb = Number of intervals shorter than 10ms / number of intervals longer than 10ms
 """
+
+
+def modified_launch_rate(intervals):
+    shorter_than_10ms = np.sum(intervals < 10)
+    longer_than_10ms = np.sum(intervals > 10)
+
+    if longer_than_10ms == 0:
+        return 0
+
+    Rb = shorter_than_10ms / longer_than_10ms
+    return Rb
+
+
+"""
+    Standard deviation of durations of intervals between spikes
+"""
+
+
+def standard_deviation_of_duration(intervals):
+    return np.std(intervals)
+
+
+"""
+    Signal power in the low and high frequency bands.
+"""
+
+
+def signal_power(data, f=20000, low_band=(0, 500), high_band=(500, 3000)):
+    # Perform FFT
+    N = len(data)
+    T = 1.0 / f
+    yf = fft(data)
+    xf = np.linspace(0.0, 1.0 / (2.0 * T), N // 2)
+
+    # Power spectrum
+    power_spectrum = 2.0 / N * np.abs(yf[:N // 2])
+
+    # Low frequency band power
+    low_band_power = np.sum(power_spectrum[(xf >= low_band[0]) & (xf < low_band[1])])
+
+    # High frequency band power
+    high_band_power = np.sum(power_spectrum[(xf >= high_band[0]) & (xf <= high_band[1])])
+
+    return low_band_power, high_band_power
+
+
+"""
+    Average Nonlinear Energy'
+    ANE = 1/(N-2) * sum(|xi^2 - xi+1 * xi-1|)
+"""
+
+
+def average_nonlinear_energy(data):
+    N = len(data)
+    sum = 0.0
+    for i, value in enumerate(data):
+        if i < N - 1:
+            sum += abs(value ** 2 - data[i + 1] * data[i - 1])
+
+    ANE = (1 / (N - 2)) * sum
+    return ANE
+
+
+"""
+    Average Absolute Difference
+    AAD = 1/(N-2) * sum(|xi - mean|)
+"""
+
+
+def average_absolute_difference(data):
+    N = len(data)
+    mean_value = np.mean(data)
+    AAD = (1 / (N - 2)) * np.sum(np.abs(data[1:-1] - mean_value))
+    return AAD
+
+
+"""
+    Root Mean Square
+    RMS = sqrt(1/N * sum(xi^2))
+"""
+
+
+def rms(data):
+    return np.sqrt(np.mean(np.square(data)))
+
 
 file = '/Users/pawelmanczak/Downloads/pacjenci/extracted_data.csv'
 
@@ -130,6 +218,8 @@ print("Srednia cczęstotliowść występowania impulsów nerwowych " + str(avera
 print("Współczynnik wystrzeliwania " + str(launch_rate(intervals)))
 print("wskaźnik pauz " + str(pause_indicator(intervals)))
 print("Współczynnik pauz " + str(pause_ratio(intervals)))
+print("Modyfikowany współczynnik wystrzeliwania " + str(modified_launch_rate(intervals)))
+print("Odchylenie standardowe długości interwałów" + str(standard_deviation_of_duration(intervals)))
 
 # spike_indices = np.array([0, 2000, 4000, 8000, 13000, 20000])
 # print(calculate_intervals(spike_indices))

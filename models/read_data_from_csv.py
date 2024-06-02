@@ -37,10 +37,20 @@ def extract_time_range(csv_file, start, end):
     filtered_df = df[(df['Time'] >= start) & (df['Time'] <= end)]
     return filtered_df['2: preprocessed'].values
 
+"""
+   if label == "['Skorupa lub prazkowie']":
+        color = 'green'
+    if label == "['Czesci zewnetrzne galki bladej (5-6 mm przed celem)']":
+        color = 'red'
+    if label == "['Czesci wewnetrzne galki bladej (2-3 mm przed celem lub do 1 mm za celem)']":
+        color = 'yellow'"""
 
 # Load label data
 label_data = pd.read_csv(label_file_path)
 extracted_data = []
+extracted_skorupa = []
+extracted_zewnetrzne = []
+extracted_wewnetrzne = []
 
 for index, row in label_data.iterrows():
     file_path = joinPath(csv_path_base, extract_path_from_name(row["csv"]))
@@ -50,6 +60,13 @@ for index, row in label_data.iterrows():
         continue
 
     data = extract_time_range(csv_file=file_path, start=row['start'], end=row['end'])
+    if row['timeserieslabels'] == "['Skorupa lub prazkowie']":
+        extracted_skorupa.append(data)
+    if row['timeserieslabels'] == "['Czesci zewnetrzne galki bladej (5-6 mm przed celem)']":
+        extracted_zewnetrzne.append(data)
+    if row['timeserieslabels'] == "['Czesci wewnetrzne galki bladej (2-3 mm przed celem lub do 1 mm za celem)']":
+        extracted_wewnetrzne.append(data)
+
     extracted_data.append(data)
 
 # Convert the extracted data to a DataFrame
@@ -58,6 +75,14 @@ extracted_df = pd.DataFrame(extracted_data)
 # Save the extracted data to a CSV file
 extracted_output_file = '/Users/pawelmanczak/Downloads/pacjenci/extracted_data.csv'
 extracted_df.to_csv(extracted_output_file, index=False)
+
+extracted_output_file_skorupa = '/Users/pawelmanczak/Downloads/pacjenci/extracted_data_skorupa.csv'
+extracted_output_file_zewnetrzne = '/Users/pawelmanczak/Downloads/pacjenci/extracted_data_zewnetrzne.csv'
+extracted_output_file_wewnetrzne = '/Users/pawelmanczak/Downloads/pacjenci/extracted_data_wewnetrzne.csv'
+
+pd.DataFrame(extracted_skorupa).to_csv(extracted_output_file_skorupa, index=False)
+pd.DataFrame(extracted_zewnetrzne).to_csv(extracted_output_file_zewnetrzne, index=False)
+pd.DataFrame(extracted_wewnetrzne).to_csv(extracted_output_file_wewnetrzne, index=False)
 
 print(f"Extracted data saved to {extracted_output_file}")
 

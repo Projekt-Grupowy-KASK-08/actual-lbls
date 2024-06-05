@@ -9,7 +9,6 @@ base_dir = 'C:\\Users\\kasia\\OneDrive\\Pulpit\\pacjenci\\'
 # Read the CSV file
 df = pd.read_csv(base_dir + 'label_with_file_path.csv')
 
-
 # Iterate over the rows of the DataFrame
 for index, row in df.iterrows():
     # Open csv file of each operation and read it
@@ -22,7 +21,13 @@ for index, row in df.iterrows():
     if label == "['Czesci wewnetrzne galki bladej (2-3 mm przed celem lub do 1 mm za celem)']":
         segment_size = 10000
 
-        _, csv = data_without_extreme_spikes(csv, segment_size=1000)
+        # Create a new figure and add a subplot
+        fig, axs = plt.subplots(2, 1, sharex=True, figsize=(14, 7))
+
+        # Plot all data as an outline
+        axs[0].plot(csv['Time'], csv['2: preprocessed'], linewidth=0.5, alpha=0.5, color="gray")
+
+        _, csv = data_without_extreme_spikes(csv, segment_size=1000, ax_to_plot_threshold=axs[0])
         ranges_clean_data, csv = data_without_extreme_spikes(csv, segment_size=1000)
 
         # Define start and end of label
@@ -41,17 +46,14 @@ for index, row in df.iterrows():
         start_time = row['start']
         end_time = row['end']
 
-        # Create a new figure and add a subplot
-        fig, axs = plt.subplots(2, 1, sharex=True, figsize=(14, 7))
-
         # Add title and labels
         axs[0].set_title(label)
         axs[0].set_xlabel('Time')
         axs[0].set_ylabel('Signal')
+
         # Shadow clean data
         for start, end in zip(ranges_clean_data['start_time'], ranges_clean_data['end_time']):
             axs[0].axvspan(start, end, color='gray', alpha=0.5)
-
 
         # Find the indices corresponding to the start and end times
         start_index = csv['Time'].searchsorted(start_time)
@@ -112,33 +114,15 @@ for index, row in df.iterrows():
             start_index = i * segment_size
             end_index = min((i + 1) * segment_size, len(csv['Time']))
 
-            left_neighbour_segment = 10
-            right_neighbour_segment = 10
-            if i < left_neighbour_segment:
-                left_neighbour_segment = i
-            elif i + right_neighbour_segment > len(segment):
-                right_neighbour_segment = len(segment) - i
-            threshold = 10 * np.std(
-                csv.iloc[(i - left_neighbour_segment) * segment_size:(i + 1 + right_neighbour_segment) * segment_size][
-                    "2: preprocessed"])
-
-            # Plot the threshold
-            axs[0].plot([csv['Time'].iloc[start_index], csv['Time'].iloc[end_index - 1]], [threshold, threshold], color='r',
-                        linestyle='--', linewidth=0.5)
-
             # Plot the spikes
             axs[0].plot(csv['Time'].iloc[i * segment_size + spikes], csv['2: preprocessed'].iloc[i * segment_size + spikes],
                         'r.', markersize=2)
 
-        num_segments = len(segments)
         # Calculate the midpoint of each segment
+        num_segments = len(segments)
         midpoints = [
             (csv['Time'].iloc[i * segment_size] + csv['Time'].iloc[min((i + 1) * segment_size, len(csv['Time'])) - 1]) / 2
             for i in range(num_segments)]
-
-        # Plot the distribution of spikes per segment in the second subplot
-        total_time = csv['Time'].iloc[-1] - csv['Time'].iloc[0]
-
 
         # Plot the statistics in the fourth subplot
         axs[1].plot(midpoints, frequency_coefficients, label='Frequency Coefficient', color='purple')

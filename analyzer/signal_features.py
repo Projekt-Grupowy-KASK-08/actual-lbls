@@ -202,7 +202,7 @@ def rms(data):
     return np.sqrt(np.mean(np.square(data)))
 
 
-def data_without_extreme_spikes(data, segment_size):
+def data_without_extreme_spikes(data, segment_size, ax_to_plot_threshold=None):
     ranges = {
         'start_time': [],
         'end_time': []
@@ -230,6 +230,14 @@ def data_without_extreme_spikes(data, segment_size):
             ranges['start_time'].append(segment['Time'].iloc[0])
             ranges['end_time'].append(segment['Time'].iloc[-1])
             clear_indices.extend(segment.index)
+
+        if ax_to_plot_threshold is not None:
+            start_index = i * segment_size
+            end_index = min((i + 1) * segment_size, len(data['Time']))
+            ax_to_plot_threshold.plot([data['Time'].iloc[start_index], data['Time'].iloc[end_index - 1]], [threshold, threshold], color='r',
+                            linestyle='--', linewidth=0.5)
+
+
 
     return ranges, data.loc[clear_indices]
 

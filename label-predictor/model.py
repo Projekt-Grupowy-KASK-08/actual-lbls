@@ -34,32 +34,36 @@ class NewModel(LabelStudioMLBase):
         predictions = []
         for task in tasks:
             csv_url = task['data']['csv']
+            url = csv_url.replace(' ', '%20').replace('http://localhost/dbs/static/', 'https://kask.eti.pg.edu.pl/dbs/static/preprocessed/')
+            print(url)
             try:
-                data = pd.read_csv(csv_url.replace(' ', '%20'))  # Zamień spacje na %20
+                data = pd.read_csv(url)
             except Exception as e:
+                print(url)
                 print(f"Błąd wczytywania danych: {e}")
-                continue
-
+ 
             if data is None:
-                result = [{}]
+                predictions.append({})
             else:
                 start, end = classify(data, 1000)
-                result = [{
-                    'type': 'timeserieslabels',
-                    'value': {
-                        'start': start,
-                        'end': end,
-                        'labels': ["Skorupa lub prazkowie"],
-                    }
-                }]
-            predictions.append({
-                'result': result,
-                'model_version': self.get('model_version')
-            })
+                predictions.append({
+                    "model_version": self.get("model_version"),
+                    "score": 1.0,
+                    "result": [{
+                        "id": "test",
+                        "from_name": "label",
+                        "to_name": "ts",
+                        "type": "timeserieslabels",
+                        "value": {
+                            "start": start,
+                            "end": end,
+                            "instant": False,
+                            "timeserieslabels": ["Skorupa lub prazkowie"]
+                        }
+                    }]
+                })
 
-        print(predictions)
-
-        return ModelResponse(predictions=predictions)
+        return predictions
 
     def fit(self, event, data, **kwargs):
         """

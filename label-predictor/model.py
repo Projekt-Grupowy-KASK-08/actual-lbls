@@ -58,7 +58,7 @@ class NewModel(LabelStudioMLBase):
                             "start": start,
                             "end": end,
                             "instant": False,
-                            "timeserieslabels": ["Skorupa lub prazkowie"]
+                            "timeserieslabels": ["Czysty fragment"]
                         }
                     }]
                 })

@@ -2,7 +2,7 @@ import requests
 
 # Konfiguracja
 base_url = 'http://localhost/dbs/labels/api'
-token = '07df1e9f0377286a6c6d6e4e5021de1af5736dd8'
+token = 'b0a04e88161975f85c20959eabfe373f26f8b2bd'
 headers = {
     'Authorization': f'Token {token}',
     'Content-Type': 'application/json'

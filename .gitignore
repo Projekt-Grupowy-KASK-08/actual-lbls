@@ -138,4 +138,4 @@ dmypy.json
 # Dataset folder
 /data/
 
-cache.db
+label-predictor/data/server/models/cache.db

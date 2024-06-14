@@ -3,10 +3,10 @@ from FixNames import get_date, change_polish_characters, find_patient
 import re
 LABEL_STUDIO_URL = 'http://localhost/dbs/labels/'
 FILE_SERVER_URL = 'http://localhost/dbs/static/'
-OUTPUT_DIR = r"C:\semestr 6\actual-lbls\Label-studio-API"  # path where ProjectParameters.txt is and to save the script
-INPUT_DIR = r"C:\semestr 6\actual-lbls\http-server\data"  # path to the directory that contains patients directories
-PROJECT_ID_OFFSET = 45  # id ze sciezki url ostatnio utworzonego projektu (lewy gorny rog)
-TOKEN = "bf7e7d843681e97e6a0bc32535cb26a69fbae376"
+OUTPUT_DIR = r"C:\semestr 6\temp-model-classifier-merge\actual-lbls\Label-studio-API"  # path where ProjectParameters.txt is and to save the script
+INPUT_DIR = r"C:\semestr 6\temp-model-classifier-merge\actual-lbls\http-server\data"  # path to the directory that contains patients directories
+PROJECT_ID_OFFSET = 0  # id ze sciezki url ostatnio utworzonego projektu (lewy gorny rog)
+TOKEN = "b0a04e88161975f85c20959eabfe373f26f8b2bd"
 
 
 def get_data_for_project(id_chart, patient_name, operation_id, file_name, f_p, last):

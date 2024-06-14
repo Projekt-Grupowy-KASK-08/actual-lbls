@@ -1,31 +1,35 @@
 import requests
 
 # Konfiguracja
-base_url = 'http://localhost/dbs/labels/api/'
-token = 'f6431894b13286720025e5a23b50652095b74cf9'
+base_url = 'http://localhost/dbs/labels/api'
+token = 'b0a04e88161975f85c20959eabfe373f26f8b2bd'
 headers = {
     'Authorization': f'Token {token}',
     'Content-Type': 'application/json'
 }
+FIRST_ID = 2
+LAST_ID = 6
 
 
 # Funkcja do pobierania wszystkich ID ML backendów
 def get_ml_backend_ids():
     ml_backend_ids = []
-    url = f'{base_url}/ml'
-    response = requests.get(url, headers=headers)
+    for ID in range(FIRST_ID, LAST_ID + 1):
+        url = f'{base_url}/ml?project={ID}'
+        print(url)
+        response = requests.get(url, headers=headers)
 
-    if response.status_code == 200:
-        try:
-            ml_backends = response.json()
-            print("Odpowiedź serwera:", ml_backends)  # Dodano wyświetlanie odpowiedzi serwera
-            for ml_backend in ml_backends:
-                ml_backend_ids.append(ml_backend['id'])
-        except ValueError as e:
-            print(f'Błąd dekodowania JSON: {e}')
-    else:
-        print(f'Błąd podczas pobierania ML backendów: {response.status_code}')
-        print(f'Odpowiedź serwera: {response.text}')
+        if response.status_code == 200:
+            try:
+                ml_backends = response.json()
+                print("Odpowiedź serwera:", ml_backends)  # Dodano wyświetlanie odpowiedzi serwera
+                for ml_backend in ml_backends:
+                    ml_backend_ids.append(ml_backend['id'])
+            except ValueError as e:
+                print(f'Błąd dekodowania JSON: {e}')
+        else:
+            print(f'Błąd podczas pobierania ML backendów: {response.status_code}')
+            print(f'Odpowiedź serwera: {response.text}')
 
     return ml_backend_ids
 

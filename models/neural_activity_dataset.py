@@ -62,3 +62,4 @@ class NeuralActivityDataset(Dataset):
         if self.transforms:
             sample = self.transforms(sample)
         return sample["activity"], sample["label"]
+

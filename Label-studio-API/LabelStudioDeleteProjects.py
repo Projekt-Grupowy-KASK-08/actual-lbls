@@ -1,8 +1,8 @@
-LABEL_STUDIO_URL = 'https://kask.eti.pg.edu.pl/dbs/labels/'
-FIRST_PROJECT_ID = 791
-LAST_PROJECT_ID = 1025
-OUTPUT_DIR = r"C:\semestr 6\actual-lbls\parser"  # path to save the script
-TOKEN = ""
+LABEL_STUDIO_URL = 'http://localhost/dbs/labels/'
+FIRST_PROJECT_ID = 38
+LAST_PROJECT_ID = 45
+OUTPUT_DIR = r"C:\semestr 6\actual-lbls\Label-studio-API"  # path to save the script
+TOKEN = "bf7e7d843681e97e6a0bc32535cb26a69fbae376"
 
 
 #curl -X DELETE http://localhost:8080/api/projects/{id} -H 'Authorization: Token twojTokenAPI'

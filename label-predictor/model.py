@@ -1,12 +1,15 @@
 from typing import List, Dict, Optional
 from label_studio_ml.model import LabelStudioMLBase
 from label_studio_ml.response import ModelResponse
+import pandas as pd
+
+from classifier_logic import classify
 
 
 class NewModel(LabelStudioMLBase):
     """Custom ML Backend model
     """
-    
+
     def setup(self):
         """Configure any parameters of your model here
         """
@@ -28,27 +31,40 @@ class NewModel(LabelStudioMLBase):
         Parsed JSON Label config: {self.parsed_label_config}
         Extra params: {self.extra_params}''')
 
-        # example for resource downloading from Label Studio instance,
-        # you need to set env vars LABEL_STUDIO_URL and LABEL_STUDIO_API_KEY
-        # path = self.get_local_path(tasks[0]['data']['image_url'], task_id=tasks[0]['id'])
+        predictions = []
+        for task in tasks:
+            csv_url = task['data']['csv']
+            url = csv_url.replace(' ', '%20').replace('http://localhost/dbs/static/', 'https://kask.eti.pg.edu.pl/dbs/static/preprocessed/')
+            print(url)
+            try:
+                data = pd.read_csv(url)
+            except Exception as e:
+                print(url)
+                print(f"Błąd wczytywania danych: {e}")
+ 
+            if data is None:
+                predictions.append({})
+            else:
+                start, end = classify(data, 1000)
+                predictions.append({
+                    "model_version": self.get("model_version"),
+                    "score": 1.0,
+                    "result": [{
+                        "id": "test",
+                        "from_name": "label",
+                        "to_name": "ts",
+                        "type": "timeserieslabels",
+                        "value": {
+                            "start": start,
+                            "end": end,
+                            "instant": False,
+                            "timeserieslabels": ["Czysty fragment"]
+                        }
+                    }]
+                })
 
-        # example for simple classification
-        # return [{
-        #     "model_version": self.get("model_version"),
-        #     "score": 0.12,
-        #     "result": [{
-        #         "id": "vgzE336-a8",
-        #         "from_name": "sentiment",
-        #         "to_name": "text",
-        #         "type": "choices",
-        #         "value": {
-        #             "choices": [ "Negative" ]
-        #         }
-        #     }]
-        # }]
-        
-        return ModelResponse(predictions=[])
-    
+        return predictions
+
     def fit(self, event, data, **kwargs):
         """
         This method is called each time an annotation is created or updated
@@ -72,4 +88,3 @@ class NewModel(LabelStudioMLBase):
         print(f'New model version: {self.get("model_version")}')
 
         print('fit() completed successfully.')
-

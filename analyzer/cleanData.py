@@ -6,16 +6,42 @@ import pandas as pd
 base_dir = 'C:\\Users\kasia\\OneDrive\\Pulpit\\pacjenci\\'
 output_path = 'C:\\Users\kasia\\OneDrive\\Pulpit\\pacjenci_cleaned\\'
 
+def get_longest_range(ranges):
+    max_diff=0
+    start = 0
+    end = 0
+    for i in range(len(ranges['end_time'])):
+        diff = ranges['end_time'][i] - ranges['start_time'][i]
+        if diff > max_diff:
+            max_diff = diff
+            start = ranges['start_time'][i]
+            end = ranges['end_time'][i]
+    return start, end
+
+# Calculating treashold based on neighbouring segments
+def calculate_treshold(data, segment, segment_size, i):
+    left_neighbour_segment = 10
+    right_neighbour_segment = 10
+    if i < left_neighbour_segment:
+        left_neighbour_segment = i
+    elif i + right_neighbour_segment > len(segment):
+        right_neighbour_segment = len(segment) - i
+
+    threshold = 7 * np.std(
+        data.iloc[(i - left_neighbour_segment) * segment_size:(i + 1 + right_neighbour_segment) * segment_size][
+            "2: preprocessed"])
+    return threshold
+
 def clean_data_and_adjust_label(data, start_label, end_label, segment_size):
     clear_indices = []
     segments = int(len(data) / segment_size)
-    threshold = 10 * np.std(data["2: preprocessed"])
 
     empty_space = False
     time_adjustment = 0
 
     for i in range(segments):
         segment = data.iloc[i * segment_size:(i + 1) * segment_size]
+        threshold = calculate_treshold(data, segment, segment_size, i)
         spikes = np.where(segment["2: preprocessed"] >= threshold)[0]
         zero_count = np.sum((segment["2: preprocessed"] >= -3) & (segment["2: preprocessed"] <= 3))
 

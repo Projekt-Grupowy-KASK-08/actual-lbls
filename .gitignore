@@ -137,3 +137,5 @@ dmypy.json
 
 # Dataset folder
 /data/
+
+cache.db

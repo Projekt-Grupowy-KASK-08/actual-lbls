@@ -28,36 +28,5 @@ services:
       - label-studio
       - http-server
 
-  ml-backend:
-    image: humansignal/ml-backend:v0
-    build:
-      context: ./label-predictor
-      args:
-        TEST_ENV: ${TEST_ENV}
-    environment:
-      # set the log level for the model server
-      - LOG_LEVEL=DEBUG
-      # any other parameters that you want to pass to the model server
-      - ANY=PARAMETER
-      # specify the number of workers and threads for the model server
-      - WORKERS=1
-      - THREADS=4
-      # specify the model directory (likely you don't need to change this)
-      - MODEL_DIR=/data/models
-
-      # Specify the Label Studio URL and API key to access
-      # uploaded, local storage and cloud storage files.
-      # Do not use 'localhost' as it does not work within Docker containers.
-      # Use prefix 'http://' or 'https://' for the URL always.
-      # Determine the actual IP using 'ifconfig' (Linux/Mac) or 'ipconfig' (Windows).
-      - LABEL_STUDIO_URL=http://label-studio
-      - LABEL_STUDIO_API_KEY=4fc41f83962fa2b1319b2d0db9988dc8068678f1
-    ports:
-      - "9090:9090"
-    volumes:
-      - "./label-predictor/data/server:/data"
-    networks:
-      - etykiety
-
 networks:
   etykiety:

@@ -276,8 +276,6 @@ def data_without_extreme_spikes(data, segment_size, ax_to_plot_threshold=None):
     if previous_was_accepted:
         ranges['end_time'].append(last_end_time)
 
-    for i in range(len(ranges['start_time'])):
-        print(f"Start: {ranges['start_time'][i]}, End: {ranges['end_time'][i]}")
 
     start, end = get_longest_range(ranges)
     return start, end

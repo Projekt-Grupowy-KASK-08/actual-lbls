@@ -10,7 +10,7 @@ from signal_features import (
 )
 
 # Base directory
-base_dir = 'C:\\Users\\kasia\\OneDrive\\Pulpit\\pacjenci\\'
+base_dir = 'C:\\inzynierka\\pacjenci\\'
 
 def plot_csv(file_path):
     # Open csv file of each operation and read it

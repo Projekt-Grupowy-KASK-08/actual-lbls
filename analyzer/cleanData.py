@@ -3,8 +3,8 @@ import os
 import pandas as pd
 
 
-base_dir = 'C:\\Users\kasia\\OneDrive\\Pulpit\\pacjenci\\'
-output_path = 'C:\\Users\kasia\\OneDrive\\Pulpit\\pacjenci_cleaned\\'
+base_dir = 'C:\\inzynierka\\pacjenci\\'
+output_path = 'C:\\inzynierka\\pacjenci_cleaned\\'
 
 def get_longest_range(ranges):
     max_diff=0
@@ -24,12 +24,20 @@ def calculate_treshold(data, segment, segment_size, i):
     right_neighbour_segment = 10
     if i < left_neighbour_segment:
         left_neighbour_segment = i
-    elif i + right_neighbour_segment > len(segment):
-        right_neighbour_segment = len(segment) - i
+    elif i + right_neighbour_segment > len(data) // segment_size:
+        right_neighbour_segment = len(data) // segment_size - i - 1
 
-    threshold = 7 * np.std(
-        data.iloc[(i - left_neighbour_segment) * segment_size:(i + 1 + right_neighbour_segment) * segment_size][
-            "2: preprocessed"])
+    if left_neighbour_segment + right_neighbour_segment <= 1:
+        return np.nan
+
+    segment_data = \
+    data.iloc[(i - left_neighbour_segment) * segment_size: (i + 1 + right_neighbour_segment) * segment_size][
+        "2: preprocessed"]
+    if len(segment_data) > 1:
+        threshold = 7 * np.std(segment_data.dropna())
+    else:
+        threshold = np.nan
+
     return threshold
 
 def clean_data_and_adjust_label(data, start_label, end_label, segment_size):

@@ -25,4 +25,33 @@ for index, row in df.iterrows():
 # Save the updated DataFrame to a new CSV file
 df.to_csv(base_dir + 'label_with_file_path.csv', index=False)
 
+# dodaj tylko bezwzględną ścieżkę do pliku
+"""import pandas as pd
+import re
+import os
+
+input_csv = r"C:\inzynierka\pacjenci\label.csv"  # zamień na właściwą ścieżkę do pliku
+output_csv = r"C:\inzynierka\pacjenci\edited_label_with_file_path.csv"  # zamień na właściwą ścieżkę do pliku wyjściowego
+
+def edit_file_paths(file_path):
+    # Remove the specified part of the URL
+    edited_path = re.sub(r"https://kask.eti.pg.edu.pl/dbs/static/preprocessed//", "/", file_path)
+    # Replace name with initials
+    edited_path = re.sub(r"(\w+)\s(\w+)/", lambda m: f"/{m.group(1)[0]}{m.group(2)[0]}/", edited_path)
+    return edited_path
+
+def edit_csv_file(input_csv, output_csv):
+    df = pd.read_csv(input_csv)
+
+    # Edit the file paths
+    df['csv'] = df['csv'].apply(edit_file_paths)
+
+    # Save to a new CSV file
+    df.to_csv(output_csv, index=False)
+    print(f"Edited CSV saved to {output_csv}")
+
+# Run the function
+edit_csv_file(input_csv, output_csv)"""
+
+
     

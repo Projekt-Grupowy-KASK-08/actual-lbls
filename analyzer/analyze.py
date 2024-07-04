@@ -20,8 +20,6 @@ def plot_csv(file_path):
     # Extract label from the directory structure (assuming the label is part of the path)
     # This part can be customized based on how labels are organized in the directory structure
     parts = file_path.split(os.sep)
-    pacjent = parts[-3]
-    operacja = parts[-2]
     label = file_path
 
     segment_size = 10000
@@ -34,20 +32,14 @@ def plot_csv(file_path):
 
     start, end = data_without_extreme_spikes(csv, segment_size=1000, ax_to_plot_threshold=axs[0])
 
-    start_time = csv['Time'].iloc[0]
-    end_time = csv['Time'].iloc[-1]
-
     # Add title and labels
     axs[0].set_title(label)
-    axs[0].set_xlabel('Time')
-    axs[0].set_ylabel('Signal')
+    axs[0].set_xlabel('Time [ms]')
+    axs[0].set_ylabel('Signal [μV]')
+    axs[0].legend()
 
     # Shadow clean data
     axs[0].axvspan(start, end, color='gray', alpha=0.5)
-
-    # Find the indices corresponding to the start and end times
-    start_index = csv['Time'].searchsorted(start_time)
-    end_index = csv['Time'].searchsorted(end_time)
 
     # Split the signal into segments
     segments = [csv['2: preprocessed'][i:i + segment_size] for i in range(0, len(csv['2: preprocessed']), segment_size)]
@@ -119,6 +111,8 @@ def plot_csv(file_path):
 
     plt.tight_layout()
     plt.show()
+    #png_filename = "png_classifier\\" + os.path.basename(file_path).replace('.csv', '.png')
+    #plt.savefig(png_filename)
 
 
 # Recursively find all CSV files in the base directory inside pacjent/operacja folders

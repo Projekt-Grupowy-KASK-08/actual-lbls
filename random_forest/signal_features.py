@@ -168,16 +168,18 @@ def signal_power(data, f=20000, low_band=(0, 500), high_band=(500, 3000)):
 """
 
 
+
 def average_nonlinear_energy(data):
     N = len(data)
-    sum = 0.0
-    for i, value in enumerate(data):
-        if i < N - 1:
-            sum += abs(value ** 2 - data[i + 1] * data[i - 1])
+    if N < 3:
+        return 0
 
-    ANE = (1 / (N - 2)) * sum
+    total_sum = 0.0
+    for i in range(1, N - 1):
+        total_sum += abs(data.iloc[i] ** 2 - data.iloc[i + 1] * data.iloc[i - 1])
+
+    ANE = (1 / (N - 2)) * total_sum
     return ANE
-
 
 """
     Average Absolute Difference

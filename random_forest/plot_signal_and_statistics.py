@@ -6,8 +6,9 @@ from signal_features import (
     data_without_extreme_spikes, countSpikes, average_frequency_of_spikes, calculate_intervals,
     frequency_coefficient, launch_rate, pause_indicator, pause_ratio,
     modified_launch_rate, standard_deviation_of_duration, signal_power,
-    average_nonlinear_energy, average_absolute_difference, rms
+    average_nonlinear_energy, average_absolute_difference, rms, get_mean_spike_hight
 )
+
 
 input_csv = r"C:\inzynierka\pacjenci\label_with_file_path.csv"  # zamień na właściwą ścieżkę do pliku
 
@@ -19,7 +20,7 @@ def extract_depth(file_path):
 
 def display_plots(file_path, filtered_data, preprocessed_data, statistics, spike_indices, label):
     # Create a figure with subplots
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6), gridspec_kw={'width_ratios': [3, 1]})
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5), gridspec_kw={'width_ratios': [3, 1]})
 
     # Plot the clipped signal
     ax1.plot(filtered_data['Time'], preprocessed_data, label='Clipped Signal')
@@ -28,6 +29,7 @@ def display_plots(file_path, filtered_data, preprocessed_data, statistics, spike
     ax1.set_ylabel('Signal')
     ax1.set_title(f'{label} \nClipped Signal for {file_path}')
     ax1.legend()
+    ax1.set_ylim(-500, 500)
 
     # Display statistics next to the plot
     textstr = '\n'.join([f'{key}: {value:.2f}' for key, value in statistics.items()])
@@ -58,6 +60,7 @@ for index, row in df.iterrows():
 
         # Wywoływanie funkcji do obliczania statystyk
         spike_count, spike_indices = countSpikes(preprocessed_data)
+        mean_spike_hight = get_mean_spike_hight(preprocessed_data, spike_indices)
         avg_freq_spikes = average_frequency_of_spikes(preprocessed_data)
         intervals = calculate_intervals(spike_indices)
         freq_coeff = frequency_coefficient(intervals)
@@ -86,7 +89,8 @@ for index, row in df.iterrows():
             'High Band Power': high_band_power,
             'Avg NL Energy': avg_nl_energy,
             'Avg Abs Diff': avg_abs_diff,
-            'RMS': root_mean_square
+            'RMS': root_mean_square,
+            'Mean Spike Hight': mean_spike_hight
         }
 
         # Wyświetlanie wykresów

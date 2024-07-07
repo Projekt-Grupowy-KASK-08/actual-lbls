@@ -4,17 +4,34 @@ from numpy.fft import fft
 
 def countSpikes(data):
     threshold = 3 * np.std(data)
+    spike_points = []
+    spike_indices = []
+    spike_count = 0
+    idx =- 1
+    for _, value in data.items():
+        idx += 1
+        if value > threshold:
+            spike_points.append((idx, value))
+        else:
+            if spike_points:
+                spike_highest_point = max(spike_points, key=lambda x: x[1])
+                spike_indices.append(spike_highest_point[0])
+                spike_points = []
+                spike_count += 1
 
-    above_threshold = data > threshold
+    # Sprawdzenie na końcu, jeśli spike_points nie są puste
+    if spike_points:
+        spike_highest_point = max(spike_points, key=lambda x: x[1])
+        spike_indices.append(spike_highest_point[0])  # Tylko indeks
+        spike_count += 1
 
-    # Count spikes only at the start of each above-threshold sequence
-    spikes = np.diff(above_threshold.astype(int)) == 1
-
-    # Add 1 to the result to account for the first spike if it starts at index 0
-    spike_count = np.sum(spikes) + (above_threshold.iloc[0] == True)
-
-    spike_indices = np.where(spikes)[0] + 1  # +1 to correct the index shift due to np.diff
+    # Zwracanie liczby spików oraz indeksów
     return spike_count, spike_indices
+
+
+def get_mean_spike_hight(data, spike_indices):
+
+    return np.mean([data.iloc[i] for i in spike_indices])
 
 
 """

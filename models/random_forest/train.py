@@ -10,9 +10,10 @@ import joblib
 
 # Wywołać raz, zeby utworzyc plik csv ze statystykami dla modelu
 # argumentem jest czas analizowanego sygnału w sekundach
-#save_statistics_in_a_file(0.1)
+save_statistics_in_a_file(1/8)
 
-data = pd.read_csv('output_statistics.csv')
+"""data = pd.read_csv('output_statistics.csv')
+print(data)
 print("\nNazwy kolumn:")
 print(data.columns)
 data['label'] = data['label'].apply(lambda x: x.strip("[]").replace("'", ""))
@@ -80,4 +81,4 @@ plot_tree(clf.estimators_[0],
           rounded=True,
           proportion=True,
           fontsize=2)
-plt.savefig('tree_visualization.png', format='png', dpi=300)
+plt.savefig('tree_visualization.png', format='png', dpi=300)"""

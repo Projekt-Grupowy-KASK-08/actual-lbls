@@ -10,7 +10,7 @@ from signal_features import (
 )
 
 
-input_csv = r"C:\inzynierka\pacjenci\label_with_file_path.csv"  # zamień na właściwą ścieżkę do pliku
+input_csv = r"/Users/pawelmanczak/Downloads/pacjenci/label_with_file_path.csv"  # zamień na właściwą ścieżkę do pliku
 
 def extract_depth(file_path):
     match = re.search(r'depth-([\d,]+)_', file_path)

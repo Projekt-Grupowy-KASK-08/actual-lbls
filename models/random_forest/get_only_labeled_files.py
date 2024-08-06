@@ -2,8 +2,8 @@ import pandas as pd
 import os
 import shutil
 
-input_csv = r"C:\inzynierka\pacjenci\label_with_file_path.csv"  # zamień na właściwą ścieżkę do pliku
-base_destination_path = r"C:\inzynierka\oznaczenia_i_pliki"  # zamień na właściwą ścieżkę docelową
+input_csv = r"/Users/pawelmanczak/Downloads/pacjenci/label_with_file_path.csv"  # zamień na właściwą ścieżkę do pliku
+base_destination_path = r"/Users/pawelmanczak/Downloads/oznaczenia_i_pliki"  # zamień na właściwą ścieżkę docelową
 
 def copy_files_with_labels():
     df = pd.read_csv(input_csv)

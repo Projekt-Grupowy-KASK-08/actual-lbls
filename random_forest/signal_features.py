@@ -219,6 +219,8 @@ def average_absolute_difference(data):
 
 def rms(data):
     return np.sqrt(np.mean(np.square(data)))
+
+
 def get_longest_range(ranges):
     max_diff = 0
     start = 0
@@ -230,6 +232,11 @@ def get_longest_range(ranges):
             start = ranges['start_time'][i]
             end = ranges['end_time'][i]
     return start, end
+
+
+def std(data):
+    return np.std(data)
+
 
 # Calculating threshold based on neighbouring segments
 def calculate_treshold(data, segment, segment_size, i):

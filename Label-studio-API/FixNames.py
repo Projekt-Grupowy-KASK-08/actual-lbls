@@ -1,7 +1,7 @@
 import os
 import re
 
-PATH_TO_PATIENTS = r"C:\DBS archives"
+PATH_TO_PATIENTS = r"D:\DBS archives"
 
 
 def find_patient(id_operacji):

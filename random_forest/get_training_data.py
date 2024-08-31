@@ -6,7 +6,7 @@ from signal_features import (
     data_without_extreme_spikes, countSpikes, average_frequency_of_spikes, calculate_intervals,
     frequency_coefficient, launch_rate, pause_indicator, pause_ratio,
     modified_launch_rate, standard_deviation_of_duration, signal_power,
-    average_nonlinear_energy, average_absolute_difference, rms, get_mean_spike_hight
+    average_nonlinear_energy, average_absolute_difference, rms, get_mean_spike_hight, std
 )
 from sklearn.preprocessing import LabelEncoder
 
@@ -28,7 +28,7 @@ def save_statistics_in_a_file(sample_time):
     # Tworzenie pliku CSV z nagłówkami kolumn
     with open(output_csv, 'w') as f:
         f.write(
-            'file_path,depth,label,spike_count,avg_freq_spikes,freq_coeff,launch_rate,pause_indicator,pause_ratio,mod_launch_rate,std_duration,low_band_power,high_band_power,avg_nl_energy,avg_abs_diff,rms,mean_spike_hight\n')
+            'file_path,depth,label,spike_count,avg_freq_spikes,freq_coeff,launch_rate,pause_indicator,pause_ratio,mod_launch_rate,std_duration,low_band_power,high_band_power,avg_nl_energy,avg_abs_diff,rms,mean_spike_hight,std\n')
 
     # Przetwarzanie każdego pliku CSV i zapisywanie statystyk do pliku wyjściowego
     for index, row in df.iterrows():
@@ -74,11 +74,12 @@ def save_statistics_in_a_file(sample_time):
             avg_abs_diff = average_absolute_difference(segment)
             root_mean_square = rms(segment)
             mean_spike_hight = get_mean_spike_hight(segment, spike_indices)
+            std_value = std(segment)
 
             # Zapis statystyk do pliku CSV
             with open(output_csv, 'a') as f:
                 f.write(
-                    f'{file_path},{depth},{label},{spike_count},{avg_freq_spikes},{freq_coeff},{launch_rt},{pause_ind},{pause_rat},{mod_launch_rt},{std_duration},{low_band_power},{high_band_power},{avg_nl_energy},{avg_abs_diff},{root_mean_square},{mean_spike_hight}\n')
+                    f'{file_path},{depth},{label},{spike_count},{avg_freq_spikes},{freq_coeff},{launch_rt},{pause_ind},{pause_rat},{mod_launch_rt},{std_duration},{low_band_power},{high_band_power},{avg_nl_energy},{avg_abs_diff},{root_mean_square},{mean_spike_hight},{std_value}\n')
 
     print(f"Statistics saved to {output_csv}")
 

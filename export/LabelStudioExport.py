@@ -4,10 +4,10 @@ import io
 from datetime import datetime
 from parseLabel import get_label_data
 
-API_KEY = '1c0d537815c777dd0394938b9b1a6c849cb5de84'
+API_KEY = '8a03a173c8d5c143b5ff42dddeb232546b704f14'
 LABEL_STUDIO_URL = 'https://kask.eti.pg.edu.pl/dbs/labels/'
-FIRST_ID = 1631
-LAST_ID = 1914
+FIRST_ID = 200
+LAST_ID = 284
 
 
 def fetch_project_data(project_id):

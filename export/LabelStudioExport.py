@@ -4,7 +4,7 @@ import io
 from datetime import datetime
 from parseLabel import get_label_data
 
-API_KEY = '8a03a173c8d5c143b5ff42dddeb232546b704f14'
+API_KEY = ''
 LABEL_STUDIO_URL = 'https://kask.eti.pg.edu.pl/dbs/labels/'
 FIRST_ID = 200
 LAST_ID = 284

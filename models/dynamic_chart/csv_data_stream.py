@@ -32,8 +32,5 @@ def csv_data_stream(filepath, sampling_rate, chunk_size):
                     yield chunk
                 else:
                     pass
-                    # Restart from the beginning if all data is read
-                    #index = 0
-                    #last_time = time.time()
 
     return generator()

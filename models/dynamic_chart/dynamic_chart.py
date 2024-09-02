@@ -4,7 +4,7 @@ import numpy as np
 import pyqtgraph as pg
 from PyQt5 import QtWidgets, QtCore
 
-from models.DynamicChartTest.csv_data_stream import csv_data_stream
+from models.dynamic_chart.csv_data_stream import csv_data_stream
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -63,7 +63,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == "__main__":
-    filepath = "/Users/pawelmanczak/Downloads/pacjenci/Wolf Krzysztof/546258766/depth1,5_kanalCentral.csv"  # Replace with your actual CSV file path
+    filepath = "/Users/pawelmanczak/Downloads/pacjenci/Wolf Krzysztof/546258766/depth1,5_kanalCentral.csv"
     app = QtWidgets.QApplication(sys.argv)
     main = MainWindow(filepath)
     main.show()

@@ -8,6 +8,9 @@ from PyQt5 import QtWidgets, QtCore
 from models.dynamic_chart.csv_data_stream import csv_data_stream
 from models.dynamic_chart.predict_from_saved_model import predict_from_saved_model
 
+CSV_FILEPATH = "/Users/pawelmanczak/Downloads/pacjenci/Wolf Krzysztof/546258766/depth1,5_kanalCentral.csv"
+SAMPLING_RATE = 20_000  # Hz
+NUM_OF_SECONDS_TO_DISPLAY = 4  # Duration of the visible window in seconds
 
 class PredictionWorker(QtCore.QThread):
     prediction_ready = QtCore.pyqtSignal(str)
@@ -38,8 +41,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plot_graph.setLabel("bottom", "Time (s)", **styles)
         self.plot_graph.showGrid(x=True, y=True)
 
-        self.sampling_rate = 20_000  # Hz
-        self.window_duration = 5  # Duration of the visible window in seconds
+        self.sampling_rate = SAMPLING_RATE
+        self.window_duration = NUM_OF_SECONDS_TO_DISPLAY
         self.time = np.arange(0, self.window_duration * self.sampling_rate) / self.sampling_rate
         self.values = [0] * len(self.time)
 
@@ -142,7 +145,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == "__main__":
-    filepath = "/Users/pawelmanczak/Downloads/pacjenci/Wolf Krzysztof/546258766/depth1,5_kanalCentral.csv"
+    filepath = CSV_FILEPATH
     app = QtWidgets.QApplication(sys.argv)
     main = MainWindow(filepath)
     main.show()

@@ -6,6 +6,10 @@ from PyQt5 import QtWidgets, QtCore
 
 from models.dynamic_chart.csv_data_stream import csv_data_stream
 
+CSV_FILEPATH = "/Users/pawelmanczak/Downloads/pacjenci/Wolf Krzysztof/546258766/depth1,5_kanalCentral.csv"
+SAMPLING_RATE = 20_000  # Hz
+NUM_OF_SECONDS_TO_DISPLAY = 4  # Duration of the visible window in seconds
+
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, csv_filepath):
@@ -22,11 +26,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plot_graph.showGrid(x=True, y=True)
         # self.plot_graph.setYRange(20, 40)
 
-        self.sampling_rate = 20_000  # Hz
-        self.time = np.arange(0, 2 * 60 * 10) / self.sampling_rate  # Time array in seconds
+        self.sampling_rate = SAMPLING_RATE
+        self.time = np.arange(0,
+                              SAMPLING_RATE * NUM_OF_SECONDS_TO_DISPLAY) / self.sampling_rate  # Time array in seconds
         self.values = [0] * len(self.time)  # Initialize values array with zeros
 
-        # Get a line reference (Initialize the line plot here)
         pen = pg.mkPen(color='r', width=0.5)  # Line color and width
         self.line = self.plot_graph.plot(
             self.time,
@@ -34,7 +38,6 @@ class MainWindow(QtWidgets.QMainWindow):
             pen=pen,
         )
 
-        # Initialize the CSV data stream
         chunk_size = 4000  # Number of samples to plot every update (200ms)
         self.data_stream = csv_data_stream(csv_filepath, self.sampling_rate, chunk_size)
 
@@ -63,7 +66,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == "__main__":
-    filepath = "/Users/pawelmanczak/Downloads/pacjenci/Wolf Krzysztof/546258766/depth1,5_kanalCentral.csv"
+    filepath = CSV_FILEPATH
     app = QtWidgets.QApplication(sys.argv)
     main = MainWindow(filepath)
     main.show()

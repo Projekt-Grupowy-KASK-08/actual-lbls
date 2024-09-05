@@ -119,7 +119,7 @@ class MainWindow(QtWidgets.QMainWindow):
             region = pg.LinearRegionItem(
                 values=(len(self.region_colors) - 1, len(self.region_colors)),
                 orientation='vertical',
-                brush=pg.mkBrush(255, 0, 0, alpha=10),  # Set the brush with the stored color and lower opacity
+                brush=pg.mkBrush(40, 0, 0, alpha=10),  # Set the brush with the stored color and lower opacity
                 pen=None  # No border for the regions
             )
             region.setZValue(-10)
@@ -131,7 +131,7 @@ class MainWindow(QtWidgets.QMainWindow):
             region = pg.LinearRegionItem(
                 values=(len(self.region_colors) - 1, len(self.region_colors)),
                 orientation='vertical',
-                brush=pg.mkBrush(255, 0, 0, alpha=10),  # Set the brush with the stored color and lower opacity
+                brush=pg.mkBrush(0, 40, 0, alpha=10),  # Set the brush with the stored color and lower opacity
                 pen=None  # No border for the regions
             )
             region.setZValue(-10)

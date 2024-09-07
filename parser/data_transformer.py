@@ -4,7 +4,7 @@ import pandas as pd
 from utils import read_from_dat_file, preprocess_raw_data, remove_duplicates_from_list, transform_data
 
 INPUT_DIR = r"D:\DBS archives"
-OUTPUT_DIR = r"D:\preprocessed"
+OUTPUT_DIR = r"D:\raw_data"
 PROTOCOL_FILENAME = "protokoll.txt"
 
 
@@ -26,7 +26,7 @@ def process_mer_channels(inputDir, outputDir, siteInfo):
         for i, channelPath in enumerate(channelPaths):
             # todo it is not raw at all bcs bandpass filer is used on it
             raw_data = read_from_dat_file(channelPath)
-            raw_data = transform_data(raw_data)
+            #raw_data = transform_data(raw_data)
 
             data = preprocess_raw_data(raw_data)
 

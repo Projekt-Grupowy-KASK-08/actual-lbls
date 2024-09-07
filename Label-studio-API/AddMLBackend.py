@@ -1,17 +1,17 @@
 import requests
 
 # Konfiguracja
-base_url = 'http://localhost/dbs/labels/api'
-token = '07df1e9f0377286a6c6d6e4e5021de1af5736dd8'
+base_url = 'https://kask.eti.pg.edu.pl/dbs/labels/api'
+token = '73479f6774c9e17ce3693dd121da30e3b1602919'
 headers = {
     'Authorization': f'Token {token}',
     'Content-Type': 'application/json'
 }
 
-ml_backend_url = 'http://ml-backend:9090'  # Adres ML Backend
+ml_backend_url = 'http://srv26.mikr.us:40154'  # Adres ML Backend
 
 FIRTS_PROJECT_ID = 1
-LAST_PROJECT_ID = 6
+LAST_PROJECT_ID = 283
 
 
 def add_ml_backend_to_project(project_id):

@@ -1,9 +1,7 @@
-LABEL_STUDIO_URL = 'http://localhost/dbs/labels/'
+from credentials import LABEL_STUDIO_URL, OUTPUT_DIR, TOKEN
+
 FIRST_PROJECT_ID = 38
 LAST_PROJECT_ID = 45
-OUTPUT_DIR = r"C:\semestr 6\actual-lbls\Label-studio-API"  # path to save the script
-TOKEN = "bf7e7d843681e97e6a0bc32535cb26a69fbae376"
-
 
 #curl -X DELETE http://localhost:8080/api/projects/{id} -H 'Authorization: Token twojTokenAPI'
 

@@ -4,16 +4,32 @@ import json
 URL_FILE_ADDRESS = 'http://localhost/dbs/static//'
 PATIENTS_DIRECTORY_PATH = 'C:/semestr 6/actual-lbls/http-server/data/'
 
+
 def get_label_data(csv_file_path):
     annotations = []
+
     with open(csv_file_path, mode='r', encoding='utf-8') as csvfile:
         csvreader = csv.DictReader(csvfile)
+
+        # Sprawdzenie, czy kolumna 'label' istnieje w pliku CSV
+        if 'label' not in csvreader.fieldnames:
+            print("Kolumna 'label' nie istnieje w pliku CSV.")
+            return
+        row_number = 0
         for row in csvreader:
+            row_number += 1
             file_path = row['csv'].replace(URL_FILE_ADDRESS, PATIENTS_DIRECTORY_PATH)
+
             if row['label']:
                 try:
                     label_data = json.loads(row['label'])
                     for entry in label_data:
+                        # Sprawdzenie, czy 'timeserieslabels' nie jest równe ["Czysty fragment"]
+                        if entry.get('timeserieslabels') == ["Czysty fragment"]:
+                            print(
+                                f"Pominięto wpis z 'timeserieslabels' równym ['Czysty fragment'] w wierszu {row_number}")
+                            continue
+
                         start = entry['start']
                         end = entry['end']
                         timeserieslabels = entry['timeserieslabels']
@@ -23,9 +39,16 @@ def get_label_data(csv_file_path):
                     print(f"Error decoding JSON for row {row['id']}: {e}")
             else:
                 print(f"Empty 'label' field in row {row['id']}")
+
     with open("label.csv", mode='w', encoding='utf-8', newline='') as outfile:
         fieldnames = ['csv', 'start', 'end', 'timeserieslabels']
         csvwriter = csv.DictWriter(outfile, fieldnames=fieldnames)
         csvwriter.writeheader()
-        for annotation in annotations:
-            csvwriter.writerow(annotation)
+        if len(annotations) > 0:
+            for annotation in annotations:
+                csvwriter.writerow(annotation)
+            print("Wyodrębnione dane  zostały zapisane do pliku label.csv")
+
+
+file_path = r"C:\inzynierka\label-studio-models\actual-lbls\export\24-05-2024_23-07-17.csv"
+get_label_data(file_path)

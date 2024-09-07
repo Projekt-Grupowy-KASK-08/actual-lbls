@@ -142,6 +142,10 @@ dmypy.json
 *.sh
 *.csv
 *.png
+*.jpg
+*.jpeg
+*.gif
+
 
 
 
